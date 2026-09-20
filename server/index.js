@@ -4,18 +4,27 @@ import cors from 'cors';
 import {ApolloServer} from '@apollo/server';
 import {expressMiddleware} from '@as-integrations/express5'
 import dotenv from 'dotenv'
+import axios from 'axios';
 
 dotenv.config()
 
 const typeDefs = `#graphql
+
+    type Todo {
+        id: ID!
+        title: String!
+        userId: ID!
+
+    }
+
     type Query {
-        hello: String
+        getTodos: [Todo]
     }
 `;
 
 const resolvers = {
     Query: {
-        hello: () => "Hello World!"
+        getTodos: async() => (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
     }
 };
 
