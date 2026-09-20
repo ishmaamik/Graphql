@@ -30,6 +30,7 @@ const typeDefs = `#graphql
 
 const resolvers = {
     Todo:{
+        //if there is user object inside Todo how to resolve that user
         user: async(parent) => (await axios.get(`https://jsonplaceholder.typicode.com/users/${parent.userId}`)).data 
     },
     Query: {
