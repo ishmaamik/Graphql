@@ -10,21 +10,32 @@ dotenv.config()
 
 const typeDefs = `#graphql
 
+    type User {
+        id: ID!
+        name: String!
+    }
     type Todo {
         id: ID!
         title: String!
         userId: ID!
-
+        user: User
     }
 
     type Query {
         getTodos: [Todo]
+        getAllUsers: [User]
+        getUserbyId(id: ID!): User
     }
 `;
 
 const resolvers = {
+    Todo:{
+        user: async(parent) => (await axios.get(`https://jsonplaceholder.typicode.com/users/${parent.userId}`)).data 
+    },
     Query: {
-        getTodos: async() => (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
+        getTodos: async() => (await axios.get('https://jsonplaceholder.typicode.com/todos')).data,
+        getAllUsers: async() => (await (axios.get('https://jsonplaceholder.typicode.com/users'))).data,
+        getUserbyId: async(parent, {id}) => (await (axios.get(`https://jsonplaceholder.typicode.com/users/${id}`))).data
     }
 };
 
